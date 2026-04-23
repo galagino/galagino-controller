@@ -7,6 +7,7 @@
 
 #ifndef NO_WIFI_BUILD
 #include <WiFi.h>
+#include <WiFiMulti.h>
 #include <ESPAsyncWebServer.h>
 #include <WebOTA.h>
 #include "webserver.h"
@@ -19,6 +20,8 @@
 #include <esp_arduino_version.h>
 
 #ifndef NO_WIFI_BUILD
+
+WiFiMulti wifiMulti;
 AsyncWebServer web(80);
 AsyncWebSocket ws("/ws");
 
@@ -33,7 +36,8 @@ void onReboot_cb(void) {
 
 #endif
 
-#define LED_PIN 2
+#define INTERNAL_LED_PIN 2
+#define EXTERNAL_LED_PIN 27
 #ifndef NEW_PAIRING_TIMEOUT
 #define NEW_PAIRING_TIMEOUT 90000
 #endif
@@ -158,13 +162,18 @@ void setup() {
   char hostname[33];
 
   Console.begin(115200);
-  delay(500);
+  delay(600);
 
   const uint8_t* addr = BP32.localBdAddress();
   Console.printf("ESP IDF version:     %s\n", esp_get_idf_version());
   Console.printf("ESP Arduino version: %d.%d.%d\n", ESP_ARDUINO_VERSION_MAJOR, ESP_ARDUINO_VERSION_MINOR, ESP_ARDUINO_VERSION_PATCH);
   Console.printf("Firmware:            %s\n", BP32.firmwareVersion());
-  Console.printf("BD Addr:             %02X:%02X:%02X:%02X:%02X:%02X\n", addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]);
+  Console.printf("BD Addr:             %02x:%02x:%02x:%02x:%02x:%02x\n", addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]);
+  Console.printf("Free heap:           %d\n", ESP.getFreeHeap());
+  Console.printf("Main core:           %d\n", xPortGetCoreID());
+  Console.printf("Main priority:       %d\n", uxTaskPriorityGet(NULL));
+  Console.printf("Build:               %s %s\n", __DATE__, __TIME__);
+  Console.printf("Build:               %s\n", BUILD_TIME);
 
   BP32.setup(&onConnectedController, &onDisconnectedController);
   BP32.forgetBluetoothKeys();
@@ -172,8 +181,10 @@ void setup() {
   BP32.enableBLEService(false);
   BP32.enableVirtualDevice(false);
 
-  pinMode(LED_PIN, OUTPUT);
-  digitalWrite(LED_PIN, LOW);
+  pinMode(INTERNAL_LED_PIN, OUTPUT);
+  pinMode(EXTERNAL_LED_PIN, OUTPUT);
+  digitalWrite(INTERNAL_LED_PIN, LOW);
+  digitalWrite(EXTERNAL_LED_PIN, LOW);
 
   dumpMacros();
 
@@ -186,8 +197,13 @@ void setup() {
   WiFi.setScanMethod(WIFI_ALL_CHANNEL_SCAN);
   WiFi.setSortMethod(WIFI_CONNECT_AP_BY_SIGNAL);
   WiFi.mode(WIFI_STA);
-  WiFi.begin(WIFI_SSID, WIFI_PASSWD);
-
+  //wifiMulti.setStrictMode(true);
+  //wifiMulti.setAllowOpenAP(true);
+  //WiFi.begin(WIFI_SSID, WIFI_PASSWD);
+  wifiMulti.addAP(WIFI_SSID, WIFI_PASSWD);
+  wifiMulti.addAP(WIFI_SSID, WIFI_PASSWD);
+  wifiMulti.addAP(WIFI_SSID, WIFI_PASSWD);
+  wifiMulti.run();
   Console.printf("Hostname: %s\n", hostname);
 
   setupWebServer();
@@ -224,7 +240,8 @@ void loop() {
     if (numControllers == 0 && pairingEnabled) cycle=250;
     isOn = !isOn;
     if (numControllers > 0) isOn = true;
-    digitalWrite(LED_PIN, isOn);
+    digitalWrite(INTERNAL_LED_PIN, isOn);
+    digitalWrite(EXTERNAL_LED_PIN, isOn);
     nextToggle = m + cycle;
   }
 
