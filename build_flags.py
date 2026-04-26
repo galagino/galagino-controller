@@ -3,7 +3,7 @@ import datetime
 
 ts = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
 
-env.Append(CPPDEFINES=[("BUILD_TIME",  env.StringifyMacro(ts))])
+#env.Append(CPPDEFINES=[("BUILD_TIME",  env.StringifyMacro(ts))])
 
 # General options that are passed to the C and C++ compilers
 env.Append(CCFLAGS=[])

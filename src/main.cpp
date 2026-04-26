@@ -172,8 +172,9 @@ void setup() {
   Console.printf("Free heap:           %d\n", ESP.getFreeHeap());
   Console.printf("Main core:           %d\n", xPortGetCoreID());
   Console.printf("Main priority:       %d\n", uxTaskPriorityGet(NULL));
-  Console.printf("Build:               %s %s\n", __DATE__, __TIME__);
-  Console.printf("Build:               %s\n", BUILD_TIME);
+  Console.printf("Build __DATE__:      %s\n", __DATE__);
+  Console.printf("Build __TIME__:      %s\n", __TIME__);
+  Console.printf("Build:               %d\n", COMPILE_UNIX_TIME);
 
   BP32.setup(&onConnectedController, &onDisconnectedController);
   BP32.forgetBluetoothKeys();
@@ -187,6 +188,8 @@ void setup() {
   digitalWrite(EXTERNAL_LED_PIN, LOW);
 
   dumpMacros();
+
+  setupSlave(SLAVE_ADDR, SLAVE_SDA, SLAVE_SCL);
 
   #ifndef NO_WIFI_BUILD
   #if defined(WIFI_HOSTNAME)
@@ -217,7 +220,6 @@ void setup() {
   Console.printf("No Wifi build");
   #endif
 
-  setupSlave(SLAVE_ADDR, SLAVE_SDA, SLAVE_SCL);
 }
 
 static unsigned long nextToggle=0;
