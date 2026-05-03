@@ -10,8 +10,8 @@
 #define GALAGINO_BUTTON_COIN  0x40
 #define GALAGINO_BUTTON_EXTRA 0x80
 
-extern volatile uint8_t controller_state;
+extern volatile uint16_t controller_state;
 
-uint8_t getControllerInput();
+uint16_t getControllerInput();
 void updateControllerInput(ControllerPtr ctl);
 void dumpMacros();

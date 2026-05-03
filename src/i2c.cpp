@@ -12,8 +12,9 @@ void onReceive(int i) {
 }
 
 void onRequest() {
-  uint8_t data = controller_state;
-  Wire.write(&data, 1);
+  uint16_t data = controller_state;
+  Wire.write(data & 0xff);
+  Wire.write(data >> 8);
 }
 
 void setupSlave(uint8_t addr, int sda, int scl) {

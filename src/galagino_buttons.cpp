@@ -3,9 +3,9 @@
 
 #define DEAD_ZONE 30
 
-volatile uint8_t controller_state = 0;
+volatile uint16_t controller_state = 0;
 
-uint8_t getControllerInput() {
+uint16_t getControllerInput() {
   return controller_state;
 }
 
