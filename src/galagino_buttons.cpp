@@ -17,19 +17,25 @@ void updateControllerInput(ControllerPtr ctl) {
   uint16_t buttons = ctl->buttons();
   uint16_t misc    = ctl->miscButtons();
 
-  controller_state = ((axisX < -DEAD_ZONE)    ? GALAGINO_BUTTON_LEFT  : 0) |
-                     ((axisX >  DEAD_ZONE)    ? GALAGINO_BUTTON_RIGHT : 0) |
-                     ((axisY < -DEAD_ZONE)    ? GALAGINO_BUTTON_UP    : 0) |
-                     ((axisY >  DEAD_ZONE)    ? GALAGINO_BUTTON_DOWN  : 0) |
-                     ((dpad & DPAD_LEFT)      ? GALAGINO_BUTTON_LEFT  : 0) |
-                     ((dpad & DPAD_RIGHT)     ? GALAGINO_BUTTON_RIGHT : 0) |
-                     ((dpad & DPAD_UP)        ? GALAGINO_BUTTON_UP    : 0) |
-                     ((dpad & DPAD_DOWN)      ? GALAGINO_BUTTON_DOWN  : 0) |
-                     ((buttons & (BUTTON_A|BUTTON_A))                   ? GALAGINO_BUTTON_FIRE  : 0) | // A or B             - FIRE
-                     ((buttons & (BUTTON_X|BUTTON_Y))                   ? GALAGINO_BUTTON_COIN  : 0) | // X or Y             - COIN
-                     ((misc & MISC_BUTTON_SELECT)                       ? GALAGINO_BUTTON_COIN  : 0) | // SELECT             - COIN
-                     ((misc & MISC_BUTTON_START)                        ? GALAGINO_BUTTON_START : 0) | // START              - START
-                     ((buttons & (BUTTON_SHOULDER_L|BUTTON_SHOULDER_R)) ? GALAGINO_BUTTON_EXTRA : 0);  // Left/Right trigger - EXTRA
+  controller_state = ((axisX < -DEAD_ZONE)            ? GALAGINO_BUTTON_LEFT  : 0) |
+                     ((axisX >  DEAD_ZONE)            ? GALAGINO_BUTTON_RIGHT : 0) |
+                     ((axisY < -DEAD_ZONE)            ? GALAGINO_BUTTON_UP    : 0) |
+                     ((axisY >  DEAD_ZONE)            ? GALAGINO_BUTTON_DOWN  : 0) |
+                     ((dpad & DPAD_LEFT)              ? GALAGINO_BUTTON_LEFT  : 0) |
+                     ((dpad & DPAD_RIGHT)             ? GALAGINO_BUTTON_RIGHT : 0) |
+                     ((dpad & DPAD_UP)                ? GALAGINO_BUTTON_UP    : 0) |
+                     ((dpad & DPAD_DOWN)              ? GALAGINO_BUTTON_DOWN  : 0) |
+                     ((buttons & (BUTTON_A|BUTTON_B)) ? GALAGINO_BUTTON_FIRE  : 0) |    // A or B -> FIRE
+                     ((buttons & (BUTTON_X|BUTTON_Y)) ? GALAGINO_BUTTON_FIRE  : 0) |    // X or Y -> FIRE
+                     ((buttons & BUTTON_A)            ? GALAGINO_BUTTON_A     : 0) |
+                     ((buttons & BUTTON_B)            ? GALAGINO_BUTTON_B     : 0) |
+                     ((buttons & BUTTON_X)            ? GALAGINO_BUTTON_X     : 0) |
+                     ((buttons & BUTTON_Y)            ? GALAGINO_BUTTON_Y     : 0) |
+                     ((misc & MISC_BUTTON_START)      ? GALAGINO_BUTTON_START : 0) |    // START  -> START 
+                     ((misc & MISC_BUTTON_SELECT)     ? GALAGINO_BUTTON_MENU  : 0) |    // SELECT -> MENU
+                     ((buttons & BUTTON_SHOULDER_L)   ? GALAGINO_BUTTON_COIN  : 0) |    // L1     -> Coin
+                     ((buttons & BUTTON_SHOULDER_R)   ? GALAGINO_BUTTON_EXTRA : 0) ;    // L2     -> Extra
+         
 }
 
 void dumpMacros() {

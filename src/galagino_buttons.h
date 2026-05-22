@@ -10,6 +10,13 @@
 #define GALAGINO_BUTTON_COIN  0x40
 #define GALAGINO_BUTTON_EXTRA 0x80
 
+#define GALAGINO_BUTTON_A    0x0100
+#define GALAGINO_BUTTON_B    0x0200
+#define GALAGINO_BUTTON_X    0x0400
+#define GALAGINO_BUTTON_Y    0x0800
+
+#define GALAGINO_BUTTON_MENU 0x8000
+
 extern volatile uint16_t controller_state;
 
 uint16_t getControllerInput();

@@ -1,9 +1,11 @@
 #include "web.h"
+#include "globals.h"
 #include <ESPAsyncWebServer.h>
 
+AsyncWebServer web(80);
+AsyncWebSocket ws("/ws");
 
-extern AsyncWebServer web;
-
+const char *ok = "OK\n";
 
 void setupWebServer() {
 
@@ -38,5 +40,40 @@ void setupWebServer() {
     req->send(rsp);
   });
 
+  web.on("/pair",
+         HTTP_GET,
+         [](AsyncWebServerRequest *req) {
+    pairingStart=millis();
+    pairingEnabled=true;
 
+    AsyncWebServerResponse *rsp = req->beginResponse(200, "text/css", (const uint8_t *)ok, strlen(ok));
+    req->send(rsp);
+  });
+
+  web.on("/dump",
+         HTTP_GET,
+         [](AsyncWebServerRequest *req) {
+    
+    serialDump=true;
+    AsyncWebServerResponse *rsp = req->beginResponse(200, "text/css", (const uint8_t *)ok, strlen(ok));
+    req->send(rsp);
+  });
+  
+  web.on("/nodump",
+         HTTP_GET,
+         [](AsyncWebServerRequest *req) {
+    
+    serialDump=false;
+    AsyncWebServerResponse *rsp = req->beginResponse(200, "text/css", (const uint8_t *)ok, strlen(ok));
+    req->send(rsp);
+  });
+
+  web.on("/forgetkeys",
+         HTTP_GET,
+         [](AsyncWebServerRequest *req) {
+    
+    forgetKeys=true;
+    AsyncWebServerResponse *rsp = req->beginResponse(200, "text/css", (const uint8_t *)ok, strlen(ok));
+    req->send(rsp);
+  });
 }

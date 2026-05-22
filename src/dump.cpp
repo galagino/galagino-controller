@@ -2,6 +2,59 @@
 #include "dump.h"
 
 void dumpGamepad(ControllerPtr ctl) {
+
+  auto dpad    = ctl->dpad();
+  auto buttons = ctl->buttons();
+  auto misc    = ctl->miscButtons();
+
+
+  Console.printf(
+    "controller=%d "
+    "%s %s %s %s "    // dpad
+    "%s %s %s %s "    // buttons
+    "%s %s "          // L1/R1
+    "%s %s "          // L2/R2
+    "%s %s "          // L3/R3
+    "%s %s %s %s "    // select/start/system/capture 
+    "%4d %4d %4d %4d" // axis
+    "\n",
+
+    ctl->index(),
+    dpad & DPAD_LEFT   ? "LT" : "lt",
+    dpad & DPAD_RIGHT  ? "RT" : "rt",
+    dpad & DPAD_UP     ? "UP" : "up",
+    dpad & DPAD_DOWN   ? "DN" : "dn",
+    
+    buttons & BUTTON_A ? "A"  : "a",
+    buttons & BUTTON_B ? "B"  : "b",
+    buttons & BUTTON_X ? "X"  : "x",
+    buttons & BUTTON_Y ? "Y"  : "y",
+
+    buttons & BUTTON_SHOULDER_L ? "L1" : "l1",
+    buttons & BUTTON_SHOULDER_R ? "R1" : "r1",
+    buttons & BUTTON_TRIGGER_L  ? "L2" : "l2",
+    buttons & BUTTON_TRIGGER_R  ? "R2" : "r2",
+    buttons & BUTTON_THUMB_L    ? "L3" : "l3",
+    buttons & BUTTON_THUMB_R    ? "R3" : "r3",
+
+    misc & MISC_BUTTON_SELECT  ? "SELECT"  : "select",
+    misc & MISC_BUTTON_START   ? "START"   : "start",
+    misc & MISC_BUTTON_SYSTEM  ? "SYSTEM"  : "system",
+    misc & MISC_BUTTON_CAPTURE ? "CAPTURE" : "capture",
+
+    ctl->axisX(), 
+    ctl->axisY(), 
+    ctl->axisRX(),
+    ctl->axisRY()
+  );
+
+}
+
+
+
+
+
+void dumpGamepad_x(ControllerPtr ctl) {
     Console.printf(
         "idx=%d, bat=%d dpad: 0x%02x, buttons: 0x%04x, axis L: %4d, %4d, axis R: %4d, %4d, brake: %4d, throttle: %4d, "
         "misc: 0x%02x, gyro x:%6d y:%6d z:%6d, accel x:%6d y:%6d z:%6d\n",

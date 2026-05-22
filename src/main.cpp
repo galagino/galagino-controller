@@ -4,6 +4,7 @@
 #include "galagino_buttons.h"
 #include "dump.h"
 #include "i2c.h"
+#include "globals.h"
 
 #ifndef NO_WIFI_BUILD
 #include <WiFi.h>
@@ -22,8 +23,6 @@
 #ifndef NO_WIFI_BUILD
 
 WiFiMulti wifiMulti;
-AsyncWebServer web(80);
-AsyncWebSocket ws("/ws");
 
 void onStart_cb(void) { Console.printf("onStart\n"); };
 void onEnd_cb(void)   { Console.printf("onEnd\n"); };
@@ -42,9 +41,6 @@ void onReboot_cb(void) {
 #define NEW_PAIRING_TIMEOUT 90000
 #endif
 
-ControllerPtr Controllers[BP32_MAX_GAMEPADS];
-volatile uint8_t numControllers = 0;
-
 void onConnectedController(ControllerPtr ctl) {
   bool foundEmptySlot = false;
   for (int i = 0; i < BP32_MAX_GAMEPADS; i++) {
@@ -53,7 +49,9 @@ void onConnectedController(ControllerPtr ctl) {
       // Additionally, you can get certain gamepad properties like:
       // Model, VID, PID, BTAddr, flags, etc.
       ControllerProperties properties = ctl->getProperties();
-      Console.printf("Controller model: %s, VID=0x%04x, PID=0x%04x\n", 
+      Console.printf("Controller addr=%02x:%02x:%02x:%02x:%02x:%02x  model=[ %s ] VID=0x%04x, PID=0x%04x\n", 
+                    properties.btaddr[0], properties.btaddr[1], properties.btaddr[2],
+                    properties.btaddr[3], properties.btaddr[4], properties.btaddr[5],
                     ctl->getModelName().c_str(), properties.vendor_id, properties.product_id);
       Controllers[i] = ctl;
       foundEmptySlot = true;
@@ -151,12 +149,13 @@ void processControllers() {
   for (auto Controller : Controllers) {
     if (Controller && Controller->isConnected() && Controller->hasData()) {
       updateControllerInput(Controller);
-      //Console.printf("controller: %d\n", controller_state);
-      //dumpGamepad(Controller);
+      if (serialDump) {
+        Console.printf("controller: %d\n", controller_state);
+        dumpGamepad(Controller);
+      }
     }
   }
 }
-
 
 void setup() {
   char hostname[33];
@@ -222,19 +221,28 @@ void setup() {
 
 }
 
-static unsigned long nextToggle=0;
-static bool          isOn=false;
-static bool          pairingEnabled=true;
-
 void loop() {
 
   unsigned long m = millis();
 
-  // Only allow pairing for  NEW_PAIRING_TIMEOUT ms after boot
-  if (pairingEnabled && m > NEW_PAIRING_TIMEOUT) {
+  if (!pairingEnabled && m < pairingStart + NEW_PAIRING_TIMEOUT) {
+    pairingEnabled=true;
+    BP32.enableNewBluetoothConnections(true);
+    Console.println("pairing enabled");
+  }
+
+  // Only allow pairing for NEW_PAIRING_TIMEOUT ms
+  if (pairingEnabled && m > pairingStart + NEW_PAIRING_TIMEOUT) {
     pairingEnabled=false;
     BP32.enableNewBluetoothConnections(false);
     Console.println("pairing disabled");
+  }
+
+  if (forgetKeys) {
+    BP32.forgetBluetoothKeys();
+    Console.println("forget keys");
+    delay(500);
+    ESP.restart();
   }
 
   unsigned long cycle = 1000;
