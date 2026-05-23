@@ -33,8 +33,8 @@ void updateControllerInput(ControllerPtr ctl) {
                      ((buttons & BUTTON_Y)            ? GALAGINO_BUTTON_Y     : 0) |
                      ((misc & MISC_BUTTON_START)      ? GALAGINO_BUTTON_START : 0) |    // START  -> START 
                      ((misc & MISC_BUTTON_SELECT)     ? GALAGINO_BUTTON_MENU  : 0) |    // SELECT -> MENU
-                     ((buttons & BUTTON_SHOULDER_L)   ? GALAGINO_BUTTON_COIN  : 0) |    // L1     -> Coin
-                     ((buttons & BUTTON_SHOULDER_R)   ? GALAGINO_BUTTON_EXTRA : 0) ;    // L2     -> Extra
+                     ((buttons & BUTTON_SHOULDER_L)   ? GALAGINO_BUTTON_EXTRA : 0) |    // L1     -> Extra
+                     ((buttons & BUTTON_SHOULDER_R)   ? GALAGINO_BUTTON_COIN  : 0) ;    // L2     -> Coin
          
 }
 
