@@ -9,6 +9,8 @@ DEFAULT_ENV := d1mini32
 ENV ?= $(DEFAULT_ENV)
 hostname ?=  $(DEFAULT_HST)
 
+export PLATFORMIO_CORE_DIR ?= ~/.platformio-bluepad32
+
 ifeq ($(V),)
         VERBOSE :=
 else
