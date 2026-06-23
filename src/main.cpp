@@ -6,21 +6,17 @@
 #include "i2c.h"
 #include "globals.h"
 
-#ifndef NO_WIFI_BUILD
 #include <WiFi.h>
 #include <WiFiMulti.h>
 #include <ESPAsyncWebServer.h>
 #include <WebOTA.h>
 #include "webserver.h"
-  #ifndef WIFI_HOSTNAME
-  #define WIFI_HOSTNAME "galagino-%06x"
-  #endif
+#ifndef WIFI_HOSTNAME
+#define WIFI_HOSTNAME "galagino-%06x"
 #endif
 
 #include <esp_idf_version.h>
 #include <esp_arduino_version.h>
-
-#ifndef NO_WIFI_BUILD
 
 WiFiMulti wifiMulti;
 
@@ -32,8 +28,6 @@ void onError_cb(int code, const char* msg) {
 void onReboot_cb(void) {
   Console.printf("\nRebooting\n");
 }
-
-#endif
 
 #define INTERNAL_LED_PIN 2
 #define EXTERNAL_LED_PIN 27
@@ -173,7 +167,6 @@ void setup() {
   Console.printf("Main priority:       %d\n", uxTaskPriorityGet(NULL));
   Console.printf("Build __DATE__:      %s\n", __DATE__);
   Console.printf("Build __TIME__:      %s\n", __TIME__);
-  Console.printf("Build:               %d\n", COMPILE_UNIX_TIME);
 
   BP32.setup(&onConnectedController, &onDisconnectedController);
   BP32.forgetBluetoothKeys();
@@ -190,18 +183,12 @@ void setup() {
 
   setupSlave(SLAVE_ADDR, SLAVE_SDA, SLAVE_SCL);
 
-  #ifndef NO_WIFI_BUILD
-  #if defined(WIFI_HOSTNAME)
   snprintf(hostname, sizeof(hostname)-1, WIFI_HOSTNAME, WebOTA.ESP_getChipId());
-  #endif
   if (strlen(hostname)) { WiFi.setHostname(hostname); }
   WiFi.mode(WIFI_OFF);
   WiFi.setScanMethod(WIFI_ALL_CHANNEL_SCAN);
   WiFi.setSortMethod(WIFI_CONNECT_AP_BY_SIGNAL);
   WiFi.mode(WIFI_STA);
-  //wifiMulti.setStrictMode(true);
-  //wifiMulti.setAllowOpenAP(true);
-  //WiFi.begin(WIFI_SSID, WIFI_PASSWD);
   wifiMulti.addAP(WIFI_SSID, WIFI_PASSWD);
   wifiMulti.addAP(WIFI_SSID, WIFI_PASSWD);
   wifiMulti.addAP(WIFI_SSID, WIFI_PASSWD);
@@ -215,9 +202,6 @@ void setup() {
   WebOTA.onError(onError_cb);
   WebOTA.enable(&web);
   web.begin();
-  #else
-  Console.printf("No Wifi build");
-  #endif
 
 }
 
