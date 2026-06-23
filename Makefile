@@ -3,11 +3,11 @@ DEVICE_BASE := /dev/ttyUSB
 DEVICE_BASE := /dev/ttyACM
 DEVICE_PATH := $(DEVICE_BASE)$(DEVICE)
 
-DEFAULT_HST := galagino-ec7d64
+DEFAULT_HST := galagino-108ef4
 DEFAULT_ENV := d1mini32
 
 ENV ?= $(DEFAULT_ENV)
-hostname ?=  $(DEFAULT_HST)
+hostname ?= $(DEFAULT_HST)
 
 export PLATFORMIO_CORE_DIR ?= ~/.platformio-bluepad32
 

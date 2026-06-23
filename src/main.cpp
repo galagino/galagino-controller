@@ -183,8 +183,8 @@ void setup() {
 
   pinMode(INTERNAL_LED_PIN, OUTPUT);
   pinMode(EXTERNAL_LED_PIN, OUTPUT);
-  digitalWrite(INTERNAL_LED_PIN, LOW);
-  digitalWrite(EXTERNAL_LED_PIN, LOW);
+  analogWrite(INTERNAL_LED_PIN, 0);
+  analogWrite(EXTERNAL_LED_PIN, 0);
 
   dumpMacros();
 
@@ -250,8 +250,8 @@ void loop() {
     if (numControllers == 0 && pairingEnabled) cycle=250;
     isOn = !isOn;
     if (numControllers > 0) isOn = true;
-    digitalWrite(INTERNAL_LED_PIN, isOn);
-    digitalWrite(EXTERNAL_LED_PIN, isOn);
+    analogWrite(INTERNAL_LED_PIN, isOn ? 50 : 0);
+    analogWrite(EXTERNAL_LED_PIN, isOn ? 50 : 0);
     nextToggle = m + cycle;
   }
 
