@@ -6,6 +6,8 @@ DEVICE_PATH := $(DEVICE_BASE)$(DEVICE)
 DEFAULT_HST := galagino-108ef4
 DEFAULT_ENV := d1mini32
 
+DEFAULT_HST := galagino-343efc
+
 ENV ?= $(DEFAULT_ENV)
 hostname ?= $(DEFAULT_HST)
 

@@ -3,10 +3,10 @@
 
 #define DEAD_ZONE 30
 
-volatile uint16_t controller_state = 0;
+volatile uint32_t controller_state = 0;
 
 uint16_t getControllerInput() {
-  return controller_state;
+  return controller_state && 0x0000ffff;
 }
 
 void updateControllerInput(ControllerPtr ctl) {

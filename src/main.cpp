@@ -155,7 +155,7 @@ void setup() {
   char hostname[33];
 
   Console.begin(115200);
-  delay(600);
+  delay(300);
 
   const uint8_t* addr = BP32.localBdAddress();
   Console.printf("ESP IDF version:     %s\n", esp_get_idf_version());
@@ -169,7 +169,6 @@ void setup() {
   Console.printf("Build __TIME__:      %s\n", __TIME__);
 
   BP32.setup(&onConnectedController, &onDisconnectedController);
-  BP32.forgetBluetoothKeys();
   BP32.enableNewBluetoothConnections(true);
   BP32.enableBLEService(false);
   BP32.enableVirtualDevice(false);
@@ -184,7 +183,7 @@ void setup() {
   setupSlave(SLAVE_ADDR, SLAVE_SDA, SLAVE_SCL);
 
   snprintf(hostname, sizeof(hostname)-1, WIFI_HOSTNAME, WebOTA.ESP_getChipId());
-  if (strlen(hostname)) { WiFi.setHostname(hostname); }
+  WiFi.setHostname(hostname);
   WiFi.mode(WIFI_OFF);
   WiFi.setScanMethod(WIFI_ALL_CHANNEL_SCAN);
   WiFi.setSortMethod(WIFI_CONNECT_AP_BY_SIGNAL);
@@ -229,8 +228,8 @@ void loop() {
     ESP.restart();
   }
 
-  unsigned long cycle = 1000;
   if (m >= nextToggle) {
+    unsigned long cycle = 1000;
     if (numControllers == 0 && pairingEnabled) cycle=250;
     isOn = !isOn;
     if (numControllers > 0) isOn = true;
@@ -239,8 +238,7 @@ void loop() {
     nextToggle = m + cycle;
   }
 
-  bool dataUpdated = BP32.update();
-  if (dataUpdated)
+  if (BP32.update())
     processControllers();
   vTaskDelay(1);
 }

@@ -17,7 +17,7 @@
 
 #define GALAGINO_BUTTON_MENU 0x8000
 
-extern volatile uint16_t controller_state;
+extern uint32_t controller_state;
 
 uint16_t getControllerInput();
 void updateControllerInput(ControllerPtr ctl);
