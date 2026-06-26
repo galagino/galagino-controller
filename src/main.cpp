@@ -3,6 +3,7 @@
 #include <Bluepad32.h>
 #include "galagino_buttons.h"
 #include "dump.h"
+#include "dump-nvs.h"
 #include "i2c.h"
 #include "globals.h"
 
@@ -50,6 +51,9 @@ void onConnectedController(ControllerPtr ctl) {
       Controllers[i] = ctl;
       foundEmptySlot = true;
       numControllers++;
+
+      setMapping(properties.vendor_id, properties.product_id, 
+                 properties.btaddr[0] <<16 | properties.btaddr[1] << 8 | properties.btaddr[2] << 0);
       break;
     }
   }
@@ -193,6 +197,9 @@ void setup() {
   wifiMulti.addAP(WIFI_SSID, WIFI_PASSWD);
   wifiMulti.run();
   Console.printf("Hostname: %s\n", hostname);
+
+  // dumpNVS();
+  dumpBT();
 
   setupWebServer();
   WebOTA.onReboot(onReboot_cb);

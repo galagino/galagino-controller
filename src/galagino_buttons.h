@@ -14,6 +14,8 @@
 #define GALAGINO_BUTTON_B    0x0200
 #define GALAGINO_BUTTON_X    0x0400
 #define GALAGINO_BUTTON_Y    0x0800
+#define GALAGINO_BUTTON_L1   0x1000
+#define GALAGINO_BUTTON_R1   0x2000
 
 #define GALAGINO_BUTTON_MENU 0x8000
 
@@ -22,3 +24,4 @@ extern uint32_t controller_state;
 uint16_t getControllerInput();
 void updateControllerInput(ControllerPtr ctl);
 void dumpMacros();
+void setMapping(uint32_t vid, uint32_t pid, uint32_t manufacturer);

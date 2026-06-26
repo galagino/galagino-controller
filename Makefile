@@ -6,7 +6,7 @@ DEVICE_PATH := $(DEVICE_BASE)$(DEVICE)
 DEFAULT_HST := galagino-108ef4
 DEFAULT_ENV := d1mini32
 
-DEFAULT_HST := galagino-343efc
+#DEFAULT_HST := galagino-343efc
 
 ENV ?= $(DEFAULT_ENV)
 hostname ?= $(DEFAULT_HST)
@@ -30,10 +30,10 @@ monitor:
 config:
 	pio project config
 
-upload: include/web.h
+upload-only: include/web.h
 	pio run $(VERBOSE) -e $(ENV) -t upload --upload-port $(DEVICE_PATH)
 
-upload-monitor: include/web.h
+upload: include/web.h
 	pio run $(VERBOSE) -e $(ENV) -t upload --upload-port $(DEVICE_PATH) -t monitor --monitor-port $(DEVICE_PATH)
 
 include/web.h: assets/index.html assets/style.css assets/index.js

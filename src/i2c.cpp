@@ -12,7 +12,7 @@ void onReceive(int i) {
 }
 
 void onRequest() {
-  uint16_t data = controller_state;
+  uint16_t data = controller_state & 0x0000fffful;
   Wire.write(data & 0xff);
   Wire.write(data >> 8);
 }

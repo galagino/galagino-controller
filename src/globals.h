@@ -23,7 +23,7 @@ extern unsigned long pairingStart;
 
 #define CONTROLLER_8BITDO_ZERO2_VIDPID 0x2dc83230u
 #define CONTROLLER_8BITDO_MAC          0xe417d8u
-#define CONTROLLER_SHANWAN_MAC         0x822506
-#define CONTROLLER_SHANWAN_MAC         0x842506
+#define CONTROLLER_SHANWAN_MAC1        0x822506u
+#define CONTROLLER_SHANWAN_MAC2        0x842506u
 
 #endif
